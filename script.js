@@ -114,6 +114,36 @@ document.addEventListener("DOMContentLoaded", function () {
       posYFirstState - 30
     );
   };
+  scratchCanvas.addEventListener(
+    "touchstart",
+    function (e) {
+      e.preventDefault();
+      isScratching = true;
+    },
+    { passive: false }
+  );
+
+  scratchCanvas.addEventListener("touchend", function (e) {
+    isScratching = false;
+  });
+
+  scratchCanvas.addEventListener("touchcancel", function (e) {
+    isScratching = false;
+  });
+
+  scratchCanvas.addEventListener("touchmove", function (e) {
+    if (isScratching) {
+      var touch = e.touches[0];
+      var rect = scratchCanvas.getBoundingClientRect();
+      var x = touch.clientX - rect.left;
+      var y = touch.clientY - rect.top;
+      scratchCtx.globalCompositeOperation = "destination-out";
+      scratchCtx.beginPath();
+      scratchCtx.arc(x, y, 40, 0, Math.PI * 2, false);
+      scratchCtx.fill();
+      checkScratchedPercentage();
+    }
+  });
 
   var isScratching = false;
   scratchCanvas.addEventListener("mousedown", function (e) {
